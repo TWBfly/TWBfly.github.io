@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>面试 | Hexo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="oom避免方法总结1.减少内存占用 使用轻量级数据结构少使用枚举.比static占内存多几倍减少bitmap内存占用:预加载宽高(injustDecodeBounds=true),缩小size(缩小2的inSampleSize次幂),改解码方式(一般不用的).ARGB_8888一个像素32位,改ARGB_4444,RGB啥的,但图片颜色,清晰度什么的会受影响. 2.内存对象复用 bitmap:LR">
+<meta property="og:type" content="article">
+<meta property="og:title" content="面试">
+<meta property="og:url" content="https://github.com/TWBfly/2017/05/11/面试/index.html">
+<meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="oom避免方法总结1.减少内存占用 使用轻量级数据结构少使用枚举.比static占内存多几倍减少bitmap内存占用:预加载宽高(injustDecodeBounds=true),缩小size(缩小2的inSampleSize次幂),改解码方式(一般不用的).ARGB_8888一个像素32位,改ARGB_4444,RGB啥的,但图片颜色,清晰度什么的会受影响. 2.内存对象复用 bitmap:LR">
+<meta property="og:updated_time" content="2017-05-11T14:21:08.544Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="面试">
+<meta name="twitter:description" content="oom避免方法总结1.减少内存占用 使用轻量级数据结构少使用枚举.比static占内存多几倍减少bitmap内存占用:预加载宽高(injustDecodeBounds=true),缩小size(缩小2的inSampleSize次幂),改解码方式(一般不用的).ARGB_8888一个像素32位,改ARGB_4444,RGB啥的,但图片颜色,清晰度什么的会受影响. 2.内存对象复用 bitmap:LR">
+  
+    <link rel="alternate" href="/atom.xml" title="Hexo" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">Hexo</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Zoeken"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://github.com/TWBfly"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main"><article id="post-面试" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/05/11/面试/" class="article-date">
+  <time datetime="2017-05-11T10:08:57.000Z" itemprop="datePublished">2017-05-11</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="article-title" itemprop="name">
+      面试
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="oom避免方法总结"><a href="#oom避免方法总结" class="headerlink" title="oom避免方法总结"></a>oom避免方法总结</h2><p>1.减少内存占用</p>
+<p>使用轻量级数据结构<br>少使用枚举.比static占内存多几倍<br>减少bitmap内存占用:预加载宽高(injustDecodeBounds=true),缩小size(缩小2的inSampleSize次幂),改解码方式(一般不用的).ARGB_8888一个像素32位,改ARGB_4444,RGB啥的,但图片颜色,清晰度什么的会受影响.</p>
+<p>2.内存对象复用</p>
+<p>bitmap:LRUCache<br>listView:view<br>RecycleView:ViewHolder<br>避免在onDraw()等频发执行的方法内创建对象<br>stringbuilder/stringbuffer<br></p>
+<p>3.减少内存泄漏</p>
+<p>优先用application context代替activity context<br>handler:在onDestroy()之前remove掉队列中的消息和runnable对象,或者static加弱引用,继承Handler<br>listener监听的注销<br>cursor,connection,数据库,IO的关闭<br>AsyncTask多次new.Bitmap太多没有及时回收<br>对象的泄漏,new出一个对象,没有调用.</p>
+<h2 id="AIDL进程间通信"><a href="#AIDL进程间通信" class="headerlink" title="AIDL进程间通信"></a>AIDL进程间通信</h2><p>AIDL(Android Interface definition language)Android内部进程通信的接口定义语言.<br>通过编写aidl文件来定义进程间通信接口,编译后会自动生成响应的Java文件.<br>服务器将接口的具体实现写在stub中,用IBinder对象传递给客户端.<br>客户端bindserver,用asInterface的形式将IBinder还原成接口,在调用其接口中的方法来实现通信.</p>
+<h2 id="注意服务端与客户端包名必须一样-aidl文件一样-直接复制"><a href="#注意服务端与客户端包名必须一样-aidl文件一样-直接复制" class="headerlink" title="注意服务端与客户端包名必须一样,aidl文件一样,直接复制"></a>注意服务端与客户端包名必须一样,aidl文件一样,直接复制</h2>
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://github.com/TWBfly/2017/05/11/面试/" data-id="cj2r1ysz20001ckfdcf2c0tw3" class="article-share-link">Delen</a>
+      
+      
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2017/05/16/hello-world/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Nieuwer</strong>
+      <div class="article-nav-title">
+        
+          Hello World
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2017/05/11/建个人blog/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Ouder</strong>
+      <div class="article-nav-title">搭建个人blog</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archieven</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">May 2017</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recente berichten</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2017/05/16/hello-world/">Hello World</a>
+          </li>
+        
+          <li>
+            <a href="/2017/05/11/面试/">面试</a>
+          </li>
+        
+          <li>
+            <a href="/2017/05/11/建个人blog/">搭建个人blog</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2017 John Doe<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>
