@@ -186,13 +186,32 @@
         </div>
         <div class="col-md-8 col-md-offset-2">
       		<h2 id="oom避免方法总结"><a href="#oom避免方法总结" class="headerlink" title="oom避免方法总结"></a>oom避免方法总结</h2><p>1.减少内存占用</p>
-<p>使用轻量级数据结构<br>少使用枚举.比static占内存多几倍<br>减少bitmap内存占用:预加载宽高(injustDecodeBounds=true),缩小size(缩小2的inSampleSize次幂),改解码方式(一般不用的).ARGB_8888一个像素32位,改ARGB_4444,RGB啥的,但图片颜色,清晰度什么的会受影响.</p>
-<p>2.内存对象复用</p>
-<p>bitmap:LRUCache<br>listView:view<br>RecycleView:ViewHolder<br>避免在onDraw()等频发执行的方法内创建对象<br>stringbuilder/stringbuffer<br></p>
-<p>3.减少内存泄漏</p>
-<p>优先用application context代替activity context<br>handler:在onDestroy()之前remove掉队列中的消息和runnable对象,或者static加弱引用,继承Handler<br>listener监听的注销<br>cursor,connection,数据库,IO的关闭<br>AsyncTask多次new.Bitmap太多没有及时回收<br>对象的泄漏,new出一个对象,没有调用.</p>
-<h2 id="AIDL进程间通信"><a href="#AIDL进程间通信" class="headerlink" title="AIDL进程间通信"></a>AIDL进程间通信</h2><p>AIDL(Android Interface definition language)Android内部进程通信的接口定义语言.<br>通过编写aidl文件来定义进程间通信接口,编译后会自动生成响应的Java文件.<br>服务器将接口的具体实现写在stub中,用IBinder对象传递给客户端.<br>客户端bindserver,用asInterface的形式将IBinder还原成接口,在调用其接口中的方法来实现通信.</p>
-<h2 id="注意服务端与客户端包名必须一样-aidl文件一样-直接复制"><a href="#注意服务端与客户端包名必须一样-aidl文件一样-直接复制" class="headerlink" title="注意服务端与客户端包名必须一样,aidl文件一样,直接复制"></a>注意服务端与客户端包名必须一样,aidl文件一样,直接复制</h2>
+<pre><code>使用轻量级数据结构
+少使用枚举.比static占内存多几倍
+减少bitmap内存占用:预加载宽高(injustDecodeBounds=true),缩小size(缩小2的inSampleSize次幂),改解码方式(一般不用的).ARGB_8888一个像素32位,改ARGB_4444,RGB啥的,但图片颜色,清晰度什么的会受影响.
+</code></pre><p>2.内存对象复用</p>
+<pre><code>bitmap:LRUCache
+listView:view
+RecycleView:ViewHolder
+避免在onDraw()等频发执行的方法内创建对象
+stringbuilder/stringbuffer&lt;br/&gt;
+</code></pre><p>3.减少内存泄漏</p>
+<pre><code>优先用application context代替activity context
+handler:在onDestroy()之前remove掉队列中的消息和runnable对象,或者static加弱引用,继承Handler
+listener监听的注销
+cursor,connection,数据库,IO的关闭
+AsyncTask多次new.Bitmap太多没有及时回收
+对象的泄漏,new出一个对象,没有调用.
+</code></pre><h2 id="AIDL进程间通信"><a href="#AIDL进程间通信" class="headerlink" title="AIDL进程间通信"></a>AIDL进程间通信</h2><pre><code>AIDL(Android Interface definition language)Android内部进程通信的接口定义语言.
+通过编写aidl文件来定义进程间通信接口,编译后会自动生成响应的Java文件.    
+服务器将接口的具体实现写在stub中,用IBinder对象传递给客户端.
+客户端bindserver,用asInterface的形式将IBinder还原成接口,在调用其接口中的方法来实现通信.
+</code></pre><h2 id="注意服务端与客户端包名必须一样-aidl文件一样-直接复制"><a href="#注意服务端与客户端包名必须一样-aidl文件一样-直接复制" class="headerlink" title="注意服务端与客户端包名必须一样,aidl文件一样,直接复制"></a>注意服务端与客户端包名必须一样,aidl文件一样,直接复制</h2><p>##volatile关键字<br>    Volatile是轻量级的synchronize,在处理器开发中保证了共享变量的”可见性”.可见性的意思是当一个线程修改一个共享变量时,另一个线程能读到这个修改的值,在某些情况下比synchronize的开销更小.如果<br>    一个字段被声明volatile,java线程内存模型确保所有线程看到这个变量的值是一致的.<br>    在恰当的使用volatile比synchronize的使用和执行的成本更低,因为不会引起线程的上下文的切换和调度.<br>    volatile的优化,是追加64字节能够提高并发编程的效率</p>
+<p>##两个Activity之间如何传递参数<br>    Intent的Bundle携带参数,即intent.putExtra()<br>    传递自定义的对象:—-&gt;<br>    增加序列化Serializable和Parcelable<br>    Serializable和Parcelable的区别:—-&gt;<br>    Serializable:是反射,序列化和反序列化过程需要大量的I/O操作<br>    Parcelable:自己实现封送和解封,不需要反射,数据存放在Native中,效率快很多.底层实现是Parcel容器对象,Parcel类是一种最快的序列化和反序列化机制<br>    两个Activity传递对象需要注意:—-&gt;<br>    注意对象的大小,Intent的Bundle是使用Binder机制进行数据传递,一个进程默认有16个binder线程(大约一个线程占用128K)The Binder transaction failed because it was too large.”这类TransactionTooLargeException异常</p>
+<p>##res资源问题<br>    图片放错目录会产生什么问题—-&gt;<br>    高密度(density)的系统去使用低密度目录下的图片资源,会将图片长宽自动放大以去适应高密度的精度,图片占用的内存会更大.在图片资源有限的情况下将图片放在高密度文件夹下,节省图片的内存开支.<br>    mipmap—-&gt;<br>    官方建议如下图片资源<br>      Launcher icons.<br>      Action bar and tab icons.<br>      Notification icons</p>
+<p>##Bitmap<br>    高效的加载Bitmap,采用BitmapFactory.Options来加载图片,<br>    压缩  缩放图片主要是inSampleSize参数,采样率,采样率为1是原始大小,采样率&gt;1,比如是2,宽高则为原图大小的1/2,像素为原图的1/4,内存大小也为原图的1/4,采样率<1,就相当于1,无缩放效果 injustdecodebounds设为true,解析原始宽高,不会真正加载="" 加载大图----=""><br>    BitmapRegionDecoder.newInstance<br>    在onDraw()方法中<br>    bitmapRegionDecoder.decodeRegion(rect,options)指定绘制区域<br>    用canvas绘制出来</1,就相当于1,无缩放效果></p>
+<p>##优化列表卡顿<br>        异步<br>        在列表滑动的时候不加载,静止在加载(OnScrollListener的onScrollStateChaged判断滑动状态)<br>        开启硬件加速(android:hardwareAccelerated = “true”)</p>
+
             <div class="clearfix"></div>
             <hr class="nogutter">
         </div>

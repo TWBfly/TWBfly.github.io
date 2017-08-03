@@ -222,9 +222,12 @@
                     <p>
                       
                         oom避免方法总结1.减少内存占用
-使用轻量级数据结构少使用枚举.比static占内存多几倍减少bitmap内存占用:预加载宽高(injustDecodeBounds=true),缩小size(缩小2的inSampleSize次幂),改解码方式(一般不用的).ARGB_8888一个像素32位,改ARGB_4444,RGB啥的,但图片颜色,清晰度什么的会受影响.
+使用轻量级数据结构
+少使用枚举.比static占内存多几倍
+减少bitmap内存占用:预加载宽高(injustDecodeBounds=true),缩小size(缩小2的inSampleSize次幂),改解码方式(一般不用的).ARGB_8888一个像素32位,改ARGB_4444,RGB啥的,但图片颜色,清晰度什么的会受影响.
 2.内存对象复用
-bitmap:LRUCachelistView:viewR
+bitmap:LRUCache
+listView:vi
                       
                     </p>
                     
