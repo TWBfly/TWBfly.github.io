@@ -211,7 +211,24 @@ AsyncTask多次new.Bitmap太多没有及时回收
 <p>##res资源问题<br>    图片放错目录会产生什么问题—-&gt;<br>    高密度(density)的系统去使用低密度目录下的图片资源,会将图片长宽自动放大以去适应高密度的精度,图片占用的内存会更大.在图片资源有限的情况下将图片放在高密度文件夹下,节省图片的内存开支.<br>    mipmap—-&gt;<br>    官方建议如下图片资源<br>      Launcher icons.<br>      Action bar and tab icons.<br>      Notification icons</p>
 <p>##Bitmap<br>    高效的加载Bitmap,采用BitmapFactory.Options来加载图片,<br>    压缩  缩放图片主要是inSampleSize参数,采样率,采样率为1是原始大小,采样率&gt;1,比如是2,宽高则为原图大小的1/2,像素为原图的1/4,内存大小也为原图的1/4,采样率<1,就相当于1,无缩放效果 injustdecodebounds设为true,解析原始宽高,不会真正加载="" 加载大图----=""><br>    BitmapRegionDecoder.newInstance<br>    在onDraw()方法中<br>    bitmapRegionDecoder.decodeRegion(rect,options)指定绘制区域<br>    用canvas绘制出来</1,就相当于1,无缩放效果></p>
 <p>##优化列表卡顿<br>        异步<br>        在列表滑动的时候不加载,静止在加载(OnScrollListener的onScrollStateChaged判断滑动状态)<br>        开启硬件加速(android:hardwareAccelerated = “true”)</p>
-
+<p>##Rxjava操作符<br>    变换操作符:<br>        map最简单的变化操作符<br>        flatMap将上游发送过来的数据变换为多个数据然后合并成一个事件发送到下游,发送到下游的数据是无序<br>        ConcatMap是有序的<br>    过滤操作符:<br>        Filter过滤一部分不符合要求的事件,如果全部接受容易造成OOM,最常见的是过滤一些null<br>        Sample每隔一段时间对上游数据进行取样发送到下游,这样会导致丢失大量事件,只有特定的场合,比如对一组数中进行抽</p>
+<pre><code>   take/takeList
+       take是将上游前N项发送到下游
+       takeList是将最后N项发送到下游
+   distinct可以去除重复对象
+组合操作符:
+zip Observable.zip(observable,observable1,observable2,new Function&lt;Integer,String.String&gt;){}
+</code></pre><p>##Retrofit操作符<br>        Path相对路径<br>        Query和QueryMap<br>        Query技术Uri中?后面的key-value<br>        QueryMap就是有很多的Query<br>        Body传递的是对象,将对象转换成json数据可以通过converter实现</p>
+<pre><code>POST
+@FormURLEncoded
+Field和FieldMap
+Field表单提交,field声明表单的项
+多个就用FieldMap
+Part和PartMap
+@Mutipart
+上传文件,part和filed的区别就是part携带的参数类型更加丰富,包括数据流
+多个文件上传partMap
+</code></pre>
             <div class="clearfix"></div>
             <hr class="nogutter">
         </div>
